@@ -1,9 +1,9 @@
 from random import randint
 import numpy as np
 
-body = []
 
 def gen_text(freqMap, length):
+    body = []
     l = len(freqMap)
     n = randint(0,l)
     cur = freqMap.keys()[randint(0,l)]
@@ -26,10 +26,9 @@ def gen_text(freqMap, length):
         next_word = (get_random(freqMap[cur]),)
         body.append(''.join(next_word))
         cur = cur[1:] + (next_word)
-        print "NEW cur is ", cur
         length -= 1
     # print body
-    print " ".join(body)
+    return " ".join(body)
 
 
 def get_random(subwords):
