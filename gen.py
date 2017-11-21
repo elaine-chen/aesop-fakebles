@@ -1,34 +1,43 @@
 from random import randint
 import numpy as np
 
+"""in terms of generating titles i would love to add a comma at the end of the
+    word that occurs befor every 'the' ?? """
 
-def gen_text(freqMap, length):
+def gen_text(freq_map, length, is_story, map_len):
+    l_dup = length
     body = []
-    l = len(freqMap)
-    n = randint(0,l)
-    cur = freqMap.keys()[randint(0,l)]
+    cur = freq_map.keys()[randint(0,map_len)]
     # print "current word ", cur
     body.append("   ")
-    start_sen = True
     body.append(cur[0][0].capitalize() + cur[0][1:])
     body.append(cur[1])
     while length > 0:
-        for each in cur:
-            if start_sen == True:
-                each = each[0].capitalize() + each[1:]
-                start_sen = False
-        #***if current ends with period, make start_sen = True
-            if each[-1] == ".":
-                start_sen = True
-            # body.append(''.join(each))
-        # print "current word has subwords ", freqMap[cur]
-        # print "removing the first word ", cur, cur[1:]
-        next_word = (get_random(freqMap[cur]),)
-        body.append(''.join(next_word))
-        cur = cur[1:] + (next_word)
+        next_word = get_random(freq_map[cur])
+        body.append(next_word)
+        cur = cur[1:] + (next_word,)
         length -= 1
-    # print body
-    return " ".join(body)
+    if is_story:
+        story = " ".join(body)
+        if story[-1] in [".", "?", "!"]:
+            return story
+        else:
+            last_word_ind = max(story.rfind("."), story.rfind("!"), story.rfind("?"))
+            return story[:last_word_ind+1]
+    else:
+        if body[-1] != "THE" and body[-1] != "AND":
+            title = " ".join(body)
+        else:
+            for i in reversed(xrange(l_dup+1)):
+                if body[i] != "THE" and body[i] != "AND":
+                    body = body[:i+1]
+                    break
+                else:
+                    continue
+            title = " ".join(body)
+        if title[-1] == ",":
+            title = title[:-1]
+        return title
 
 
 def get_random(subwords):
