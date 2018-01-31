@@ -3,35 +3,42 @@ import gen
 from flask import Flask
 import grab_titles
 
-def gen_dict(source, k):
-    to_parse = Parser(source, k)
-    return to_parse.parse()
 
 app = Flask(__name__)
 
-lines = grab_titles.grab("11339-8.txt")
 
-t = grab_titles.grab_t(lines)
-title_dict = gen_dict(t, 2)
-title_dict_len = len(title_dict)
+class Aesop:
 
-txt = grab_titles.grab_txt(lines)
-text_dict = gen_dict(txt, 2)
-text_dict_len = len(text_dict)
+    def __init__(self, source):
+        self.lines = grab_titles.grab(source)
+        self.title_dict = {}
+        self.text_dict = {}
+        self.morals_dict = {}
 
-m = grab_titles.grab_m(lines)
-morals_dict = gen_dict(m, 1)
-morals_dict_len = len(morals_dict)
+    def dict_generator(self, source, k):
+        to_parse = Parser(source, k)
+        return to_parse.parse()
 
-def gen_story():
-    body =  gen.gen_text(text_dict, 500, True, text_dict_len)
-    title = gen.gen_text(title_dict, 10, False, title_dict_len)
-    moral = gen.gen_text(morals_dict, 10, True, morals_dict_len)
-    return title + "\n\n\t" + body + "\n\n\t" + moral
+    def make_dict(self):
+        t = grab_titles.grab_t(self.lines)
+        txt = grab_titles.grab_txt(self.lines)
+        m = grab_titles.grab_m(self.lines)
+        self.title_dict = self.dict_generator(t, 2)
+        self.text_dict = self.dict_generator(txt, 2)
+        self.morals_dict = self.dict_generator(m, 1)
+
+    def gen_story(self):
+        body =  gen.gen_text(self.text_dict, 500, True, len(self.text_dict))
+        title = gen.gen_text(self.title_dict, 3, False, len(self.title_dict))
+        moral = gen.gen_text(self.morals_dict, 10, True, len(self.morals_dict))
+        return title + "\n\n\t" + body + "\n\n\t" + moral
 
 
 @app.route('/')
 def story():
-    response = app.make_response(gen_story())
+    new_story = Aesop("11339-8.txt")
+    new_story.make_dict()
+    s = new_story.gen_story()
+    response = app.make_response(s)
     response.headers["content-type"] = "text/plain"
     return response
