@@ -9,7 +9,7 @@ def gen_text(freq_map, length, is_story, map_len):
     l_dup = length
     body = []
     cur = freq_map.keys()[randint(0,map_len)]
-    # print "current word ", cur
+    print "current word ", cur
     body.append(cur[0][0].capitalize() + cur[0][1:])
     for word in cur[1:]:
         body.append(word)
@@ -30,7 +30,7 @@ def gen_text(freq_map, length, is_story, map_len):
                 else:
                     continue
             else:
-                if body[-1] != "THE" and body[-1] != "AND":
+                if body[-1] != "THE" and body[-1] != "AND" and body[-1] != "HIS":
                     not_at_end = False
                     if body[0] == "AND":
                         body = body[1:]
