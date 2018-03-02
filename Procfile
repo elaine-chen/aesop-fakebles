@@ -1,1 +1,1 @@
-web: gunicorn aeso:app
+web: gunicorn app:app
