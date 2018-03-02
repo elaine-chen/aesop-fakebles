@@ -8,6 +8,7 @@ configparser==3.5.0
 enum34==1.1.6
 flake8==3.5.0
 Flask==0.12.2
+gunicorn==19.7.1
 idna==2.6
 isort==4.2.15
 itsdangerous==0.24
