@@ -21,7 +21,6 @@ class Aesop:
         self.title_dict = self.dict_generator(t, 2)
         self.text_dict = self.dict_generator(txt, 2)
         self.morals_dict = self.dict_generator(m, 1)
-        print self.title_dict
 
     def gen_story(self):
         body = gen.gen_text(self.text_dict, 500, True, len(self.text_dict))
